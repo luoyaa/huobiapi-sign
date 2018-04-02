@@ -12,6 +12,7 @@ import org.apache.http.HttpException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,9 +25,9 @@ public class AllCoinConvertEthUtil {
     private static final String HUOBI_URL = "https://api.huobi.pro";
     private static final HttpUtilManager httpUtil = HttpUtilManager.getInstance();
 
-    private static String supportUsdtCoin = "['ht','btc','bch','eth','xrp','ltc','xem','eos','dash','neo','trx','qtum','etc','omg','hsr','zec','snt','gnt','ven','cvc','storj','smt','itc','mds','nas','elf','iost','theta','let','dta','zil','ruff','ela']";
-    private static String supportEthCoin = "['ht','eos','trx','icx','lsk','qtum','omg','hsr','salt','gnt','cmt','btm','pay','powr','bat','dgd','ven','qash','gas','mana','eng','cvc','mco','rdn','chat','srn','link','act','tnb','qsp','req','appc','rcn','smt','adx','tnt','ost','itc','lun','gnx','evx','mds','snc','propy','eko','nas','wax','wicc','topc','swftc','dbc','elf','aidoc','qun','iost','yee','dat','theta','let','dta','utk','mee','zil','soc','ruff','ocn','ela','zla','stk','wpr','mtn','mtx','edu','blz','abt','ont']";
-    private static String supportBtcCoin = "['ht','bch','eth','xrp','ltc','xem','eos','dash','neo','trx','icx','lsk','qtum','etc','btg','omg','hsr','zec','snt','salt','gnt','cmt','btm','pay','knc','powr','bat','dgd','ven','qash','zrx','gas','mana','eng','cvc','mco','mtl','rdn','storj','chat','srn','link','act','tnb','qsp','req','rpx','appc','rcn','smt','adx','tnt','ost','itc','lun','gnx','ast','evx','mds','snc','propy','eko','nas','bcd','wax','wicc','topc','swftc','dbc','elf','aidoc','qun','iost','yee','dat','theta','let','dta','utk','mee','zil','soc','ruff','ocn','ela','bcx','sbtc','bifi','zla','stk','wpr','mtn','mtx','edu','blz','abt','ont']";
+    private static String[] supportUsdtCoin = {"ht", "btc", "bch", "eth", "xrp", "ltc", "xem", "eos", "dash", "neo", "trx", "qtum", "etc", "omg", "hsr", "zec", "snt", "gnt", "ven", "cvc", "storj", "smt", "itc", "mds", "nas", "elf", "iost", "theta", "let", "dta", "zil", "ruff", "ela"};
+    private static String[] supportEthCoin = {"ht", "eos", "trx", "icx", "lsk", "qtum", "omg", "hsr", "salt", "gnt", "cmt", "btm", "pay", "powr", "bat", "dgd", "ven", "qash", "gas", "mana", "eng", "cvc", "mco", "rdn", "chat", "srn", "link", "act", "tnb", "qsp", "req", "appc", "rcn", "smt", "adx", "tnt", "ost", "itc", "lun", "gnx", "evx", "mds", "snc", "propy", "eko", "nas", "wax", "wicc", "topc", "swftc", "dbc", "elf", "aidoc", "qun", "iost", "yee", "dat", "theta", "let", "dta", "utk", "mee", "zil", "soc", "ruff", "ocn", "ela", "zla", "stk", "wpr", "mtn", "mtx", "edu", "blz", "abt", "ont"};
+    private static String[] supportBtcCoin = {"ht", "bch", "eth", "xrp", "ltc", "xem", "eos", "dash", "neo", "trx", "icx", "lsk", "qtum", "etc", "btg", "omg", "hsr", "zec", "snt", "salt", "gnt", "cmt", "btm", "pay", "knc", "powr", "bat", "dgd", "ven", "qash", "zrx", "gas", "mana", "eng", "cvc", "mco", "mtl", "rdn", "storj", "chat", "srn", "link", "act", "tnb", "qsp", "req", "rpx", "appc", "rcn", "smt", "adx", "tnt", "ost", "itc", "lun", "gnx", "ast", "evx", "mds", "snc", "propy", "eko", "nas", "bcd", "wax", "wicc", "topc", "swftc", "dbc", "elf", "aidoc", "qun", "iost", "yee", "dat", "theta", "let", "dta", "utk", "mee", "zil", "soc", "ruff", "ocn", "ela", "bcx", "sbtc", "bifi", "zla", "stk", "wpr", "mtn", "mtx", "edu", "blz", "abt", "ont"};
 
     public static void main(String[] args) {
         try {
@@ -41,6 +42,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 获取我的账户所有货币对应的总ETH数量
+     *
      * @return ethCount
      */
     public static String getMyTotalEth() {
@@ -65,6 +67,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 获取自己现金账户id
+     *
      * @return accountId
      */
     public static String getMySpotAccountId() {
@@ -90,6 +93,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 获取自己账户金额json
+     *
      * @return json
      */
     public static String getAccountBalanceJson() {
@@ -106,6 +110,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 获取自己有余额的账户的信息
+     *
      * @return 账户集合
      */
     public static List<Kind> getMyBalance() {
@@ -132,12 +137,13 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 获取支持币种对应的usdt价格
+     *
      * @param coinName 货币
      * @return 货币转换usdt的价格
      */
     private static String getSupportCoinToUsdtPrice(String coinName) {
         try {
-            if (supportUsdtCoin.contains(coinName)) {
+            if (Arrays.asList(supportUsdtCoin).contains(coinName)) {
                 String supportCoinToUsdtPriceUrl = "/market/detail?symbol=" + coinName + "usdt";
                 String supportCoinToUsdtPriceJson = httpUtil.requestHttpGet(HUOBI_URL, supportCoinToUsdtPriceUrl);
                 CoinPrice coinPrice = (CoinPrice) JsonUtil.fromJson(supportCoinToUsdtPriceJson, CoinPrice.class);
@@ -146,7 +152,7 @@ public class AllCoinConvertEthUtil {
                 }
             }
             System.out.println("usdt不支持" + coinName);
-            if (supportEthCoin.contains(coinName)) {
+            if (Arrays.asList(supportEthCoin).contains(coinName)) {
                 String supportCoinToEthPriceUrl = "/market/detail?symbol=" + coinName + "eth";
                 String supportCoinToEthPriceJson = httpUtil.requestHttpGet(HUOBI_URL, supportCoinToEthPriceUrl);
                 CoinPrice coinPrice = (CoinPrice) JsonUtil.fromJson(supportCoinToEthPriceJson, CoinPrice.class);
@@ -159,7 +165,7 @@ public class AllCoinConvertEthUtil {
                 }
             }
             System.out.println("eth不支持" + coinName);
-            if (supportBtcCoin.contains(coinName)) {
+            if (Arrays.asList(supportBtcCoin).contains(coinName)) {
                 String supportCoinToBtcPriceUrl = "/market/detail?symbol=" + coinName + "btc";
                 String supportCoinToBtcPriceJson = httpUtil.requestHttpGet(HUOBI_URL, supportCoinToBtcPriceUrl);
                 CoinPrice coinPrice = (CoinPrice) JsonUtil.fromJson(supportCoinToBtcPriceJson, CoinPrice.class);
@@ -180,6 +186,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 获取货币所有支持币种
+     *
      * @return coinList
      */
     private static List getSupportCoinList() {
@@ -198,6 +205,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * ETH转换USDT价格
+     *
      * @return price
      */
     private static String getEthToUsdtPrice() {
@@ -215,6 +223,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * BTC转换USDT价格
+     *
      * @return price
      */
     private static String getBtcToUsdtPrice() {
@@ -234,6 +243,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 支持USDT的货币Json
+     *
      * @return json
      */
     public static String getSupportUsdtCoinJson() {
@@ -265,6 +275,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 支持ETH的货币Json
+     *
      * @return json
      */
     public static String getSupportEthCoinJson() {
@@ -296,6 +307,7 @@ public class AllCoinConvertEthUtil {
 
     /**
      * 支持BTC的货币Json
+     *
      * @return json
      */
     public static String getSupportBtcCoinJson() {
