@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -13,8 +12,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.*;
-import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 
@@ -47,11 +46,12 @@ public class HttpUtilManager {
 	};
 
 	private HttpUtilManager() {
-		HttpHost proxy = new HttpHost("192.168.1.115", 11111, "http");
-		DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-		client = HttpClients.custom().setConnectionManager(cm).setKeepAliveStrategy(keepAliveStrat).setRoutePlanner(routePlanner).build();
-	}
 
+//		HttpHost proxy = new HttpHost("192.168.1.115", 11111,"http");
+//		DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+//		client = HttpClients.custom().setConnectionManager(cm).setRoutePlanner(routePlanner).setKeepAliveStrategy(keepAliveStrat).build();
+		client = HttpClients.custom().setConnectionManager(cm).setKeepAliveStrategy(keepAliveStrat).build();
+	}
 	public static void IdleConnectionMonitor() {
 
 		if (System.currentTimeMillis() - startTime > 30000) {
@@ -94,7 +94,6 @@ public class HttpUtilManager {
 		} else {
 			url = url_prex + url;
 		}
-		System.out.println("url=" + url);
 
 		HttpRequestBase method = this.httpGetMethod(url);
 		method.setConfig(requestConfig);
@@ -131,7 +130,7 @@ public class HttpUtilManager {
 		method.setConfig(requestConfig);
 		String json = this.convertMap2Json(params);
 		System.out.println(json);
-		StringEntity strEntity = new StringEntity(json,"utf-8");		
+		StringEntity strEntity = new StringEntity(json,"utf-8");
 		strEntity.setContentEncoding("UTF-8"); 
 		strEntity.setContentType("application/json");  
 
@@ -164,7 +163,7 @@ public class HttpUtilManager {
 		
 		List<String> keys = new ArrayList<String>(params.keySet());
 		int keySize = keys.size();
-		JSONObject jsonParam = new JSONObject(); 
+		JSONObject jsonParam = new JSONObject();
 		for (int i = 0; i < keySize; i++) {
 			String key = keys.get(i);
 			jsonParam.put(key, params.get(key));

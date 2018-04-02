@@ -20,13 +20,6 @@ public class ParamUtils {
 		return sb.toString();
 	}
 
-	/**
-	 * ����������Ԫ�����򣬲����ա�����=����ֵ����ģʽ�á�&���ַ�ƴ�ӳ��ַ���
-	 * 
-	 * @param params
-	 *            ��Ҫ���򲢲����ַ�ƴ�ӵĲ�����
-	 * @return ƴ�Ӻ��ַ���
-	 */
 	public static String createLinkString(Map<String, String> params) {
 
 		List<String> keys = new ArrayList<String>(params.keySet());
@@ -41,7 +34,7 @@ public class ParamUtils {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			if (i == keys.size() - 1) {// ƴ��ʱ�����������һ��&�ַ�
+			if (i == keys.size() - 1) {
 				prestr = prestr + key + "=" + value;
 			} else {
 				prestr = prestr + key + "=" + value + "&";
@@ -51,11 +44,8 @@ public class ParamUtils {
 	}
 
 	public static String getUTCDate() {
-		// ȡ�ñ���ʱ�䣺
 		Calendar cal = Calendar.getInstance();
-		// ȡ��ʱ��ƫ������
 		int zoneOffset = cal.get(Calendar.ZONE_OFFSET);
-		// ȡ������ʱ�
 		int dstOffset = cal.get(Calendar.DST_OFFSET);
 		
 		cal.add(Calendar.MILLISECOND, -(zoneOffset + dstOffset));

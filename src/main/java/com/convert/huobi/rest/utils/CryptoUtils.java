@@ -1,8 +1,6 @@
 package com.convert.huobi.rest.utils;
 
-import com.convert.huobi.rest.common.Const;
 import org.apache.commons.codec.binary.Base64;
-
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,7 +8,6 @@ import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
-
 
 public class CryptoUtils {
 	public static byte[] hmacSHA256(String secretKey, String data) {
@@ -28,7 +25,7 @@ public class CryptoUtils {
 		return null;
 	}
 
-	public static String buildSign(String method, String baseUrl, String bizUrl, String params) {
+	public static String buildSign(String method, String baseUrl, String bizUrl, String params,String secretKey) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(method).append("\n");
 		sb.append(baseUrl).append("\n");
@@ -36,7 +33,7 @@ public class CryptoUtils {
 		sb.append(params);
 		String ret = "";
 		try {
-			ret = Base64.encodeBase64String(hmacSHA256(Const.Secret_Key, sb.toString()));
+			ret = Base64.encodeBase64String(hmacSHA256(secretKey, sb.toString()));
 			ret = URLEncoder.encode(ret,"UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,7 +41,7 @@ public class CryptoUtils {
 		return ret;
 	}
 
-	public static String buildSign(String method, String baseUrl, String bizUrl, Map<String, String> params) {
-		return buildSign(method, baseUrl, bizUrl, ParamUtils.createLinkString(params));
+	public static String buildSign(String method, String baseUrl, String bizUrl, Map<String, String> params,String secretKey) {
+		return buildSign(method, baseUrl, bizUrl, ParamUtils.createLinkString(params), secretKey);
 	}
 }
